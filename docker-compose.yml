@@ -1,0 +1,27 @@
+version: "2"
+services:
+    odoo_environment:
+        build: .
+        container_name: odoo_environment
+        tty: true
+        volumes:
+            - ./addons:/odoo/workspace/addons
+            - ./.odoo_config:/odoo/workspace/.odoo_config
+            - ./data_dir:/odoo/workspace/data_dir
+        ports:
+            - 8069:8069
+        links:
+            - postgres:postgres
+        depends_on:
+            - postgres
+        environment:
+            - C_FORCE_ROOT=true
+    postgres:
+        image: postgres:9.6
+        container_name: odoo_database
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_PASSWORD: odoo
+            POSTGRES_USER: odoo
+
