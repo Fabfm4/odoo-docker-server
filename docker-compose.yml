@@ -1,4 +1,4 @@
-version: "2"
+version: "2.4"
 services:
     odoo_environment:
         build: .
@@ -6,8 +6,9 @@ services:
         tty: true
         volumes:
             - ./addons:/odoo/workspace/addons
-            - ./.odoo_config:/odoo/workspace/.odoo_config
-            - ./data_dir:/odoo/workspace/data_dir
+            - ./config:/odoo/workspace/config
+            - data_dir:/odoo/workspace/data_dir
+            - odoo_addons:/odoo/workspace/odoo/addons
         ports:
             - 8069:8069
         links:
@@ -19,9 +20,20 @@ services:
     postgres:
         image: postgres:9.6
         container_name: odoo_database
+        volumes:
+            - odoo_database_volum:/databases
         ports:
             - 5432:5432
         environment:
             POSTGRES_PASSWORD: odoo
             POSTGRES_USER: odoo
 
+volumes:
+    data_dir:
+    odoo_database_volum:
+    odoo_addons:
+        driver: local
+        driver_opts:
+          type: none
+          device: $PWD/odoo_addons
+          o: bind
