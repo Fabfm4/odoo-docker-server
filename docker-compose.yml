@@ -8,11 +8,12 @@ services:
             - ./addons:/home/docker/workspace/addons
             - ./config:/home/docker/workspace/config
             - data_dir:/home/docker/workspace/data_dir
-            - odoo:/home/docker/workspace/odoo
+            - ./odoo:/home/docker/workspace/odoo
         ports:
             - 8069:8069
         links:
             - postgres:postgres
+            - ftp_server:ftp_server
         depends_on:
             - postgres
         environment:
@@ -28,12 +29,21 @@ services:
             POSTGRES_PASSWORD: odoo
             POSTGRES_USER: odoo
 
+    ftp_server:
+        image: bogem/ftp
+        container_name: ftp_server
+        volumes:
+          - ftp_server_volum:/home/vsftpd
+        ports:
+          - 20:20
+          - 21:21
+          - 47400-47470:47400-47470
+        environment:
+            FTP_USER: test
+            FTP_PASS: test
+            PASV_ADDRESS: 172.17.0.1
+
 volumes:
     data_dir:
     odoo_database_volum:
-    odoo:
-        driver: local
-        driver_opts:
-          type: none
-          device: $PWD/odoo
-          o: bind
+    ftp_server_volum:
