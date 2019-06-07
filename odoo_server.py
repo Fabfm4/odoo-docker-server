@@ -2,7 +2,11 @@
 import sys
 import os
 import json
-from subprocess import Popen, PIPE
+import jinja2
+import subprocess
+
+PWD_DOCKER = '/home/docker/workspace'
+ODOO_EVIRONMENT_CONTAINER = 'odoo_environment2'
 
 
 class bcolors:
@@ -22,13 +26,13 @@ class bcolors:
 
 
 def _print_banner():
-    bcolors.print_text('BANNER', "******** *****    ******** ********          ******** ******** ********")
-    bcolors.print_text('BANNER', "******** *****    ******** ********          ******** ******** ********")
-    bcolors.print_text('BANNER', "**    ** **   **  **    ** **    ** ******** ***      **       **    **")
-    bcolors.print_text('BANNER', "**    ** **    ** **    ** **    ** ******** ******** ******** ********")
-    bcolors.print_text('BANNER', "**    ** **   **  **    ** **    ** ********       ** **       ******")
-    bcolors.print_text('BANNER', "******** ******   ******** ********          ******** ******** *** ***")
-    bcolors.print_text('BANNER', "******** *****    ******** ********          ******** ******** ***  ***")
+    bcolors.print_text('BANNER', "******** *****    ******** ********          ******** ******** ******** ***  *** ********* ********")
+    bcolors.print_text('BANNER', "******** *****    ******** ********          ******** ******** ******** ***  *** ********* ********")
+    bcolors.print_text('BANNER', "**    ** **   **  **    ** **    ** ******** ***      **       **    ** ***  *** **        **    **")
+    bcolors.print_text('BANNER', "**    ** **    ** **    ** **    ** ******** ******** ******** ******** ***  *** ********* ********")
+    bcolors.print_text('BANNER', "**    ** **   **  **    ** **    ** ********       ** **       ******    ******  **        ******  ")
+    bcolors.print_text('BANNER', "******** ******   ******** ********          ******** ******** *** ***    ****   ********* *** *** ")
+    bcolors.print_text('BANNER', "******** *****    ******** ********          ******** ******** ***  ***    **    ********* ***  ***")
 
 
 def init(argv):
@@ -54,21 +58,75 @@ def init(argv):
         bcolors.print_text("BOLD", "Exists config.json file...")
         with open(config_file_json) as json_config:
             config = json.load(json_config)
+            bcolors.print_text("BOLD", "Verify if git is installed ...")
+            try:
+                FNULL = open(os.devnull, 'w')
+                subprocess.Popen("docker", stdout=FNULL, stderr=FNULL)
+                FNULL.close()
+                bcolors.print_text("OKGREEN", "git is already installed ... DONE!")
+            except OSError:
+                bcolors.print_text("ERROR", "git is not installed ... FAILED!")
+                exit()
+
             if 'addons' in config and len('addons') > 0:
                 for addon in config['addons']:
-                    pipe = Popen('git clone {0} {1}/{2}'.format(
-                        addon['repo'], addons_path, addon['name_directory']
-                    ), shell=True, stdout=PIPE, stderr=PIPE)
-                     = pipe.communicate()
-                    if error:
-                        print(error)
-                        exit()
+                    try:
+                        subprocess.check_output(
+                            [
+                                'git',
+                                'clone',
+                                str(addon['repo']),
+                                str("/".join([addons_path, addon['name_directory']]))
+                            ]
+                        )
+                        bcolors.print_text("OKGREEN", "repo {0} cloning in {1} ... DONE!".format(addon['repo'], addon['name_directory']))
+                    except Exception:
+                        bcolors.print_text("ERROR", "repo {0} cloning in {1} ... FAILED!".format(addon['repo'], addon['name_directory']))
+                        pass
 
-                    pipe.wait()
-                    bcolors.print_text("OKGREEN", "repo {0} cloning in {1} ... DONE!".format(addon['repo'], addon['name_directory']))
+    bcolors.print_text("BOLD", "Verify if docker is installed ...")
+    try:
+        FNULL = open(os.devnull, 'w')
+        subprocess.Popen("docker", stdout=FNULL, stderr=FNULL)
+        FNULL.close()
+        bcolors.print_text("OKGREEN", "docker is already installed ... DONE!")
+    except OSError:
+        bcolors.print_text("ERROR", "docker is not installed ... FAILED!")
+        bcolors.print_text("OKBLUE", "Install docker --> https://docs.docker.com/v17.12/install/")
+        exit()
 
+    bcolors.print_text("BOLD", "Verify if docker-compose is installed ...")
+    try:
+        FNULL = open(os.devnull, 'w')
+        subprocess.Popen("docker-compose", stdout=FNULL, stderr=FNULL)
+        FNULL.close()
+        bcolors.print_text("OKGREEN", "docker-compose is already installed ... DONE!")
+    except OSError:
+        bcolors.print_text("ERROR", "docker-compose is not installed ... FAILED!")
+        bcolors.print_text("OKBLUE", "Install docker compose --> https://docs.docker.com/compose/install/")
+        exit()
+    bcolors.print_text("BOLD", "Build containers...")
+    try:
+        subprocess.check_output(['docker-compose', 'up', '-d'])
+    except Exception:
+        bcolors.print_text("ERROR", "Can't build containers")
 
+    bcolors.print_text("BOLD", "Install requirements ...")
+    if os.path.exists(config_file_json):
+        with open(config_file_json) as json_config:
+            config = json.load(json_config)
+            if 'addons' in config and len('addons') > 0:
+                for addon in config['addons']:
+                    if os.path.exists("{0}/{1}/requirements.txt".format(addons_path, addon['name_directory'])):
+                        subprocess.check_call(
+                            'docker exec -it {0} bash -c "pip3 install -r {1}/addons/{2}/requirements.txt"'.format(
+                                ODOO_EVIRONMENT_CONTAINER,
+                                PWD_DOCKER,
+                                addon['name_directory']
+                            ), shell=True
+                        )
 
+    bcolors.print_text("OKGREEN", "all requirements are installed ... DONE!")
 
 
 def main(argv):
