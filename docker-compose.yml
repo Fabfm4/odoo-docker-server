@@ -8,9 +8,10 @@ services:
             - ./addons:/home/docker/workspace/addons
             - ./config:/home/docker/workspace/config
             - data_dir:/home/docker/workspace/data_dir
-            - odoo:/home/docker/workspace/odoo
+            - python_libs:/usr/local/lib/
+            - ./odoo:/home/docker/workspace/odoo
         ports:
-            - 8069:8069
+            - 80:8069
         links:
             - postgres:postgres
         depends_on:
@@ -31,9 +32,4 @@ services:
 volumes:
     data_dir:
     odoo_database_volum:
-    odoo:
-        driver: local
-        driver_opts:
-          type: none
-          device: $PWD/odoo
-          o: bind
+    python_libs:

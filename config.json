@@ -1,0 +1,22 @@
+{
+  "config": {
+    "dbuser": "odoo",
+    "dbname": "odoodb",
+    "dbpass": "odoo",
+    "dbfilter": "odoodb"
+  },
+  "addons": [
+    {
+      "repo": "git@github.com:Fabfm4/docker-php.git",
+      "master_branch": "master",
+      "add_to_addons-path": true,
+      "name_directory": "phps"
+    },
+    {
+      "repo": "git@git.vauxoo.com:benandfrank/benandfrank.git",
+      "master_branch": "12.0",
+      "add_to_addons-path": true,
+      "name_directory": "benandfrank"
+    }
+  ]
+}

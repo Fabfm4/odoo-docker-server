@@ -18,6 +18,9 @@ for i in $(find . -name ".git" | cut -c 3-); do
     CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     if [ $CURRENT_BRANCH == "master" ]; then
         git rebase origin/master
+    elif [ $CURRENT_BRANCH == "11.0" ]; then
+	git checkout 12.0
+	git reset --hard origin/12.0
     else
         git rebase origin/12.0
     fi
