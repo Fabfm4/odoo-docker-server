@@ -19,7 +19,7 @@ services:
         environment:
             - C_FORCE_ROOT=true
     postgres:
-        image: postgres:9.6
+        image: postgres:11
         container_name: odoo_database
         volumes:
             - odoo_database_volum:/databases
