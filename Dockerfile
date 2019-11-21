@@ -10,7 +10,7 @@ RUN useradd -u ${DOCKER_USER_ID} -mU ${DOCKER_USER}
 
 RUN apt-get update
 RUN apt-get -y upgrade
-RUN apt-get install git -y
+RUN apt-get install git libcups2-dev -y
 RUN apt-get install python3.7 -y
 RUN apt-get install python3-pip build-essential wget python3-dev python3-venv python3-wheel libxslt-dev libzip-dev libldap2-dev libsasl2-dev python3-setuptools node-less gcc musl-dev -y
 RUN pip3 install Babel decorator docutils ebaysdk feedparser gevent greenlet html2text Jinja2 lxml Mako MarkupSafe mock num2words ofxparse passlib Pillow psutil psycogreen psycopg2-binary pydot pyparsing PyPDF2 pyserial python-dateutil python-openid pytz pyusb PyYAML qrcode reportlab requests six suds-jurko vatnumber vobject Werkzeug XlsxWriter xlwt xlrd
