@@ -18,6 +18,7 @@ services:
             - postgres
         environment:
             - C_FORCE_ROOT=true
+        mem_reservation: 4000m
     postgres:
         image: postgres:11
         container_name: odoo_database

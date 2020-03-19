@@ -1,4 +1,4 @@
-FROM ubuntu:18.10
+FROM ubuntu:18.04
 
 ENV DOCKER_USER "docker"
 ENV DOCKER_USER_ID "1000"
