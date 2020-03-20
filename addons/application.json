@@ -1,4 +1,5 @@
 {
     "main_repo": "repo",
-    "main_project": "<name of project>"
+    "main_project": "<name of project>",
+    "name_of_branches": "<name of branches>"
 }
