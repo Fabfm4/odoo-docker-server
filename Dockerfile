@@ -21,8 +21,8 @@ RUN apt-get install node-less sudo -y
 RUN python3 -m pip install libsass
 RUN apt-get update
 RUN apt-get install -y wkhtmltopdf xvfb
-RUN wget https://builds.wkhtmltopdf.org/0.12.1.3/wkhtmltox_0.12.1.3-1~bionic_amd64.deb
-RUN apt install ./wkhtmltox_0.12.1.3-1~bionic_amd64.deb -y
+RUN wget https://github.com/wkhtmltopdf/packaging/releases/download/0.12.1.4-2/wkhtmltox_0.12.1.4-2.bionic_amd64.deb
+RUN apt install ./wkhtmltox_0.12.1.4-2.bionic_amd64.deb -y
 RUN cp /usr/local/bin/wkhtmltoimage /usr/bin/wkhtmltoimage
 RUN cp /usr/local/bin/wkhtmltopdf /usr/bin/wkhtmltopdf
 RUN pip3 install pyOpenSSL
