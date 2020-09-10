@@ -1,0 +1,83 @@
+#!/usr/bin/env python3
+import sys
+from os import environ, path
+
+ACTIONS_AVAILABLE = ['--help', 'start_project']
+HELP_MESSAGE = """
+Usage:	odoocker [OPTIONS]
+"""
+
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
+def join_path(origin, dest):
+    return "{0}/{1}".format(origin, dest)
+
+
+def check_skeleton_odoocker():
+    home_user = get_user_home()
+    pwd, project = get_current_project()
+    if not path.exists(join_path(home_user, ".odoocker_path")) or not path.exists(join_path(home_user, ".odoocker_path/projects")):
+        print(bcolors.FAIL + "Skeleton of application is wrong, please reinstall" + bcolors.ENDC)
+        exit()
+
+def get_user_home():
+    """This function search HOME environment variable and check if dictionary already exists
+    :return: return a string with the path which It is defined as HOME
+    :rtype: str
+    """
+    home_user = environ.get("HOME", None)
+    if not home_user:
+        print(bcolors.FAIL + "HOME environment variable wasn't found, You need define please" + bcolors.ENDC)
+        exit()
+
+    if not path.exists(home_user):
+        print(bcolors.WARNING + "Directory '{0}' doesn't exists".format(home_user) + bcolors.ENDC)
+        exit()
+
+    return home_user
+
+
+def get_current_project():
+    current_pwd = environ.get("PWD")
+    project = current_pwd.split('/')[-1:][0]
+    return current_pwd, project
+
+
+
+def check_action_is_available(action):
+    if action not in ACTIONS_AVAILABLE:
+        print("""Run 'odoocker --help' for more information about this tool.""")
+        exit()
+
+
+def help(*args):
+    print(HELP_MESSAGE)
+    exit()
+
+
+def start_project(*args):
+    check_skeleton_odoocker()
+    #TODO: Now we need check if project exists in the path
+    
+    
+    
+argv = sys.argv[1:]
+if not argv:
+    print(HELP_MESSAGE)
+    exit()
+
+
+action = argv[:1][0]
+check_action_is_available(action)
+action = action.replace("--", "")
+locals()[action](*argv[1:])
