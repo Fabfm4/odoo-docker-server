@@ -1,0 +1,16 @@
+#!/bin/bash
+sudo chown -R odoo:odoo $ODOO_DIR
+sudo chown -R odoo:odoo $ENVIRONMENT_DIR
+git clone https://www.github.com/odoo/odoo --depth 1 --branch 12.0 $ODOO_DIR
+scl enable rh-python36 -- <<EOF
+python3 -m venv $ENVIRONMENT_DIR
+source $ENVIRONMENT_DIR/bin/activate
+pip install --upgrade pip
+pip3 install wheel
+pip3 install pyOpenSSL
+pip3 install unidecode
+pip3 install boto3
+pip3 install textdistance
+pip3 install -r $ODOO_DIR/requirements.txt
+deactivate
+EOF

@@ -1,0 +1,34 @@
+version: "3.0"
+services:
+    odoo_environment:
+        build: .
+        container_name: "odoo_environment"
+        tty: true
+        volumes: 
+            - ./templates/odoo_installer:/home/odoo/odoo_installer
+            - ./config:/home/odoo/workspace/config
+            - ./commands:/home/odoo/workspace/commands
+            - python_libs:/home/odoo/.venv
+            - ./odoo:/home/odoo/workspace/odoo
+            - ./addons:/home/odoo/workspace/addons
+        ports:
+            - 80:8069
+        links: 
+            - odoo_database:odoo_database
+        depends_on:
+            - odoo_database
+
+    odoo_database:
+        image: postgres:11
+        container_name: odoo_database
+        ports:
+            - 5432:5432
+        environment:
+            POSTGRES_PASSWORD: odoo
+            POSTGRES_USER: odoo
+
+volumes:
+    python_libs:
+
+
+

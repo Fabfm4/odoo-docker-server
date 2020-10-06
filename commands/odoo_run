@@ -1,0 +1,5 @@
+#!/bin/bash
+scl enable rh-python36 -- <<EOF
+source $ENVIRONMENT_DIR/bin/activate
+/home/odoo/workspace/odoo/odoo-bin -c /home/odoo/workspace/config/.config $@
+EOF
