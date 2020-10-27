@@ -1,5 +1,5 @@
 FROM centos:7
-ENV ENVIRONMENT_DIR=/home/odoo/.venv
+ENV ENVIRONMENT_DIR=/home/odoo/.odooenv
 ENV WORKSPACE=/home/odoo/workspace
 ENV ODOO_DIR=/home/odoo/workspace/odoo
 ENV INSTALLER_PATH=/home/odoo/.odoo_installer
@@ -18,6 +18,7 @@ RUN yum localinstall /opt/wkhtmltox-0.12.6-1.centos7.x86_64.rpm -y
 RUN useradd -m -s /usr/bin/zsh -u 1000 odoo
 COPY templates/sudoers /etc/sudoers
 USER odoo
+RUN scl enable rh-python36 "python3 -m venv $ENVIRONMENT_DIR"
 RUN wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh || true
 RUN mkdir ${WORKSPACE}
 RUN echo "source scl_source enable rh-python36" >> /home/odoo/.bashrc

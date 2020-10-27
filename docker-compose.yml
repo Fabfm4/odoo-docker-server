@@ -6,10 +6,12 @@ services:
         tty: true
         volumes: 
             - ./templates/odoo_installer:/home/odoo/odoo_installer
+            - ./templates/install_requirements_git_repos.sh:/home/odoo/install_requirements_git_repos.sh
             - ./config:/home/odoo/workspace/config
             - ./commands:/home/odoo/workspace/commands
-            - python_libs:/home/odoo/.venv
+            - ./libs:/home/odoo/.odooenv
             - ./odoo:/home/odoo/workspace/odoo
+            - ./data_dir:/home/odoo/workspace/data_dir
             - ./addons:/home/odoo/workspace/addons
         ports:
             - 80:8069
@@ -23,12 +25,8 @@ services:
         container_name: odoo_database
         ports:
             - 5432:5432
+        volumes:
+            - ./database_dump:/database_dump
         environment:
             POSTGRES_PASSWORD: odoo
             POSTGRES_USER: odoo
-
-volumes:
-    python_libs:
-
-
-
