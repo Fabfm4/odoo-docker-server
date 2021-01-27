@@ -1,2 +1,4 @@
 .idea
+database_dump/*
+data_dir/*
 odoo
