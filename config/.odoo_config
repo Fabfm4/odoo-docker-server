@@ -1,10 +1,13 @@
 [options]
-addons_path = /home/docker/workspace/addons/benandfrank,/home/docker/workspace/addons/enterprise,/home/docker/workspace/odoo/addons,/home/docker/workspace/odoo/odoo/addons,/home/docker/workspace/addons/mexico,/home/docker/workspace/addons/server-tools,/home/docker/workspace/addons/xunnel-account,/home/docker/workspace/addons/vendor-bills,/home/docker/workspace/addons/optierp,/home/docker/workspace/addons/server-ux,/home/docker/workspace/addons/addons-vauxoo,/home/docker/workspace/addons/report-print-send,/home/docker/workspace/addons/purchase-workflow
+addons_path = /home/docker/workspace/addons/benandfrank,/home/docker/workspace/addons/enterprise,/home/docker/workspace/odoo/addons,/home/docker/workspace/odoo/odoo/addons,/home/docker/workspace/addons/mexico,/home/docker/workspace/addons/server-tools,/home/docker/workspace/addons/xunnel-account,/home/docker/workspace/addons/vendor-bills,/home/docker/workspace/addons/optierp,/home/docker/workspace/addons/server-ux,/home/docker/workspace/addons/account-financial-tools,/home/docker/workspace/addons/account-invoicing,/home/docker/workspace/addons/brand,/home/docker/workspace/addons/product-attribute,/home/docker/workspace/addons/queue,/home/docker/workspace/addons/addons-vauxoo,/home/docker/workspace/addons/report-print-send,/home/docker/workspace/addons/purchase-workflow
 data_dir = /home/docker/workspace/data_dir
-limit_memory_soft = 1073741824
-limit_memory_hard = 1610612736
-db_host = postgres
+limit_memory_soft = 9073741824
+limit_memory_hard = 9610612736
 limit_time_real = 10000
+limit_time_cpu = 5000
+server_wide_modules = base,web,queue_job
+workers = 2
+db_host = postgres
 db_port = 5432
 db_user = odoo
 db_name = odoodb

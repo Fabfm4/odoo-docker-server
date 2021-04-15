@@ -22,8 +22,10 @@ services:
     postgres:
         image: postgres:11
         container_name: odoo_database
+        command: ["postgres", "-c", "log_statement=all"]
         volumes:
             - odoo_database_volum:/databases
+            - ./dump_database:/dump_database
         ports:
             - 5432:5432
         environment:
