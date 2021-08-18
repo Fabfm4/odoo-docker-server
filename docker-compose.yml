@@ -1,5 +1,15 @@
 version: "2.4"
 services:
+    nginx_server:
+        image: nginx:latest
+        container_name: nginx_server
+        tty: true
+        ports:
+            - "80:80"
+        volumes:
+            - ./nginx:/etc/nginx/conf.d
+        depends_on:
+            - odoo_environment
     odoo_environment:
         build: .
         container_name: odoo_environment
@@ -7,11 +17,12 @@ services:
         volumes:
             - ./addons:/home/docker/workspace/addons
             - ./config:/home/docker/workspace/config
-            - data_dir:/home/docker/workspace/data_dir
+            - ./data_dir:/home/docker/workspace/data_dir
             - python_libs:/usr/local/lib/
             - ./odoo:/home/docker/workspace/odoo
-        ports:
-            - 80:8069
+        expose:
+            - "8069"
+            - "8072"
         links:
             - postgres:postgres
         depends_on:
