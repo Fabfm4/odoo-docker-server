@@ -1,2 +1,6 @@
 .idea
+.vagrant
+.DS_Store
 odoo_addons/*
+*.log
+__pycache__
